@@ -1,0 +1,11 @@
+.idea
+migrations/
+node_modules/
+dist/
+npm-debug.log
+
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+*.swp
+*.swo
