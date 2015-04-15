@@ -9,11 +9,16 @@ export default Router.extend({
   },
 
   routes: {
-    "": "mainPageRoute"
+    "":        "mainPageRoute",
+    "test":    "testPageRoute"
   },
 
   mainPageRoute() {
-    React.render(<MainPageComponent/>, this.container);
+    App.appRoot.setProps({layout: MainPageComponent})
+  },
+
+  testPageRoute() {
+    App.appRoot.setProps({layout: MainPageComponent})
   }
 
 });

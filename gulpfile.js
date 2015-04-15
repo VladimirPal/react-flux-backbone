@@ -71,11 +71,22 @@ gulp.task('scripts', function(cb) {
   bundle(cb, true);
 });
 
+gulp.task('fonts', function() {
+  var fonts = [
+    './node_modules/font-awesome/fonts/*'
+  ];
+  return gulp.src(fonts)
+    .pipe(gulp.dest('./dist/fonts'));
+});
+
+
+
 var reporter = 'spec';
 
 gulp.task('build', [
   'clean',
   'html',
+  'fonts',
   'styles',
   'scripts'
 ]);

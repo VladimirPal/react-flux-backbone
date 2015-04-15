@@ -1,6 +1,14 @@
-/* Only demo */
-@media (max-width: 1000px) {
-  .welcome-message {
-    display: none;
-  }
+.my-sidebar .container {
+  width: auto;
+}
+
+.sidebar-collapse .nav ul {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0s ease-in;
+}
+
+.sidebar-collapse .nav ul.menu-expanded {
+  max-height: 9000px;
+  transition: max-height 2s ease-in;
 }

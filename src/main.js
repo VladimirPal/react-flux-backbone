@@ -1,5 +1,4 @@
 import React from 'react';
-window.React = React;
 
 import Backbone from 'backbone';
 import $ from 'jquery';
@@ -9,24 +8,22 @@ import Application from './application/application';
 import Router from './routes/routes'
 
 let app = new Application();
+window.App = app;
 
 let RootComponent = React.createClass({
   render() {
-    return (
-      <div>
-        <div id="header-layout"></div>
-        <div id="menu-layout"></div>
-        <div id="main-layout"></div>
-        <div id="footer-layout"></div>
-      </div>
-    );
+    if (this.props.layout) {
+      return React.createElement(this.props.layout)
+    } else {
+     return React.DOM.div();
+    }
   }
 });
 
-let appRoot = React.render(
-    <RootComponent/>,
-    document.getElementById('application')
-  );
+app.appRoot = React.render(
+  <RootComponent/>,
+  document.getElementById('application')
+);
 
 app.routes = new Router({
   container: document.getElementById('main-layout')
