@@ -24,10 +24,12 @@ export default Router.extend({
   },
 
   secondPageRoute() {
+    SidebarActions.setActive("SecondPage");
     App.appRoot.setProps({layout: SecondPageComponent})
   },
 
   thirdPageRoute() {
+    SidebarActions.setActive("ThirdPage");
     App.appRoot.setProps({layout: ThirdPageComponent})
   }
 

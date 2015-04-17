@@ -53,6 +53,7 @@ export default Reflux.createStore({
   },
 
   updateList() {
+    console.log(this.menuItems);
     this.trigger(this.menuItems);
   }
 });
