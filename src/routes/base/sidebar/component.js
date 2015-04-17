@@ -1,13 +1,17 @@
+import _ from 'lodash'
 import React from 'react';
+import Reflux from 'reflux';
 import cx from 'classnames';
 
-let MenuItem = React.createClass({
-  getInitialState() {
-    return {actvive: false, expanded: false};
-  },
+import Store from './store'
+import Actions from './actions'
 
+let MenuItem = React.createClass({
   handleClick(event) {
-    this.setState({ active: !this.state.active, expanded: !this.state.active });
+    if (!this.props.menuItem.href) {
+      event.preventDefault();
+    }
+    Actions.switchOpen(this.props.menuItem);
   },
 
   render() {
@@ -16,11 +20,16 @@ let MenuItem = React.createClass({
 
     let ulClasses = cx({
       "nav nav-second-level": true,
-      "menu-expanded": this.state.expanded
+      "menu-expanded": menuItem.isOpen
+    });
+
+    let liClasses = cx({
+      "active": menuItem.isActive,
+      "is-open": menuItem.isOpen
     });
 
     return (
-      <li className={this.state.active ? 'active' : ''}>
+      <li className={liClasses}>
         <a href={menuItem.href} onClick={this.handleClick}>
           {menuItem.icon && <i className={menuItem.icon}></i>}
           <span className="nav-label">{menuItem.name}</span>
@@ -30,7 +39,10 @@ let MenuItem = React.createClass({
           { menuItem.childrens &&
             menuItem.childrens.map( (item, key) => {
               return (
-                <MenuItem key={key} menuItem={item} />
+                <MenuItem
+                  key={key}
+                  menuItem={item}
+                />
               );
             })
           }
@@ -41,14 +53,21 @@ let MenuItem = React.createClass({
 });
 
 export default React.createClass({
+  mixins: [Reflux.connect(Store)],
+
   render() {
     return (
       <nav className="navbar-default navbar-static-side">
         <div className="sidebar-collapse">
           <ul className="nav">
             {
-              this.props.menuItems.map( (item, key) => {
-                return (<MenuItem key={key} menuItem={item} />);
+              this.state.menuItems.map( (item, key) => {
+                return (
+                  <MenuItem
+                    key={key}
+                    menuItem={item}
+                  />
+                );
               })
             }
           </ul>
@@ -57,4 +76,3 @@ export default React.createClass({
     );
   }
 });
-
