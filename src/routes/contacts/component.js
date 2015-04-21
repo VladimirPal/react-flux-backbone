@@ -50,7 +50,7 @@ let PageComponent = React.createClass({
     return (
       <div className="wrapper wrapper-content">
         <div className="row">
-          <SpinnerComponent isShow={!contacts.isLoaded}/>
+          <SpinnerComponent msg={"Fake delay..."} isShow={!contacts.isLoaded}/>
           <ErrorComponent msg={contacts.errorMsg} isShow={contacts.isLoaded && !contacts.isSuccess}/>
           <EmptyComponent msg={"Your contact list is empty"} isShow={contacts.isLoaded && contacts.isSuccess && !contacts.items.length}/>
           {

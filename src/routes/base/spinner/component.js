@@ -10,6 +10,7 @@ export default React.createClass({
             <div className="sk-bounce2"></div>
             <div className="sk-bounce3"></div>
           </div>
+          <i>{this.props.msg}</i>
         </div>
       );
     } else { return null; }
