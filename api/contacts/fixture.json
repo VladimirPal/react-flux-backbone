@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Jonathan Swift"
+  },
+  {
+    "id": 2,
+    "name": "William Faulkner"
+  },
+  {
+    "id": 3,
+    "name": "William Golding"
+  },
+  {
+    "id": 4,
+    "name": "Richard Matheson"
+  },
+  {
+    "id": 5,
+    "name": "Ian McEwan"
+  },
+  {
+    "id": 6,
+    "name": "Jane Austen"
+  },
+  {
+    "id": 7,
+    "name": "Alexandre Dumas"
+  }
+]

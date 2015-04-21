@@ -1,6 +1,6 @@
-import _ from 'lodash'
+import _ from 'lodash';
 import Reflux from 'reflux';
-import Actions from './actions'
+import Actions from './actions';
 
 let deepChange = (items, activeId) => {
   items.map((item, key) => {
@@ -8,6 +8,9 @@ let deepChange = (items, activeId) => {
       if (_.findWhere(item.childrens, { 'id': activeId })) {
         item.isActive = true;
         item.isOpen = true;
+      } else {
+        item.isActive = false;
+        item.isOpen = false;
       }
       deepChange(item.childrens, activeId);
     } else {
@@ -32,16 +35,23 @@ export default Reflux.createStore({
   getInitialState() {
     this.menuItems = [
       {
-        name: "Main page",
+        name: "Example menu list",
         icon: "fa fa-th-large",
         childrens: [
-          {id: "MainPage", name: "SubMenu item", href: "#/"},
-          {name: "SubMenu item", href: "#"}
+          {id: "contacts", name: "Contacts", href: "#/"},
+          {id: "contacts-error", name: "Contacts with error", href: "#/contacts-with-error"},
+          {id: "contacts-empty", name: "Contacts empty list", href: "#/contacts-empty-list"}
         ]
       },
-      { id: "SecondPage", name: "Second menu item", href: "#/second"},
+      {
+        id: "SecondPage",
+        icon: "fa fa-th-large",
+        name: "Second menu item",
+        href: "#/second"
+      },
       {
         name: "Third menu item",
+        icon: "fa fa-th-large",
         childrens: [
           {id: "ThirdPage", name: "SubMenu item", href: "#/third"},
           {name: "SubMenu item", href: "#"}
@@ -53,7 +63,6 @@ export default Reflux.createStore({
   },
 
   updateList() {
-    console.log(this.menuItems);
     this.trigger(this.menuItems);
   }
 });

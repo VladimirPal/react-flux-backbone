@@ -1,3 +1,4 @@
+var api = require('./api/api');
 var express = require('express');
 var path = require('path');
 
@@ -10,6 +11,7 @@ var argv = require('yargs')
 
 var app = express();
 app.use(express.static(path.join(__dirname, "/dist")));
+app.use(api);
 
 console.log("Now listening on port " + argv.port);
 console.log("Connect to http://0.0.0.0:" + argv.port);

@@ -5,7 +5,8 @@ import $ from 'jquery';
 Backbone.$ = $;
 
 import Application from './application/application';
-import Router from './routes/routes'
+import Router from './routes/routes';
+import BaseComponent from './routes/base/component';
 
 let app = new Application();
 window.App = app;
@@ -13,7 +14,7 @@ window.App = app;
 let RootComponent = React.createClass({
   render() {
     if (this.props.layout) {
-      return React.createElement(this.props.layout)
+      return this.props.layout;
     } else {
      return React.DOM.div();
     }

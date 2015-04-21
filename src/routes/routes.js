@@ -1,37 +1,45 @@
 import React from 'react';
-import Router from '../common/router'
+import Router from '../common/router';
 
-import MainPageComponent from './main/component'
-import SecondPageComponent from './second/component'
-import ThirdPageComponent from './third/component'
+import contactsPage from './contacts/component';
+import secondPage from './second/component';
+import thirdPage from './third/component';
 
-import SidebarActions from './base/sidebar/actions'
+import SidebarActions from './base/sidebar/actions';
 
 export default Router.extend({
-  initialize(options) {
-    this.container = options.container;
-  },
-
   routes: {
-    "":          "mainPageRoute",
-    "second":    "secondPageRoute",
-    "third":     "thirdPageRoute"
+    "":                     "contactsPageRoute",
+    "contacts-with-error":  "contactsErrorPageRoute",
+    "contacts-empty-list":  "contactsEmptyPageRoute",
+    "second":               "secondPageRoute",
+    "third":                "thirdPageRoute"
   },
 
-  mainPageRoute() {
-    SidebarActions.setActive("MainPage");
-    App.appRoot.setProps({layout: MainPageComponent})
+  contactsPageRoute() {
+    App.appRoot.setProps({layout: contactsPage()});
+    SidebarActions.setActive("contacts");
   },
+
+  contactsErrorPageRoute() {
+    App.appRoot.setProps({layout: contactsPage("contacts-error")});
+    SidebarActions.setActive("contacts-error");
+  },
+
+  contactsEmptyPageRoute() {
+    App.appRoot.setProps({layout: contactsPage("contacts-empty")});
+    SidebarActions.setActive("contacts-empty");
+  },
+
 
   secondPageRoute() {
     SidebarActions.setActive("SecondPage");
-    App.appRoot.setProps({layout: SecondPageComponent})
+    App.appRoot.setProps({layout: secondPage()});
   },
 
   thirdPageRoute() {
     SidebarActions.setActive("ThirdPage");
-    App.appRoot.setProps({layout: ThirdPageComponent})
+    App.appRoot.setProps({layout: thirdPage()});
   }
-
 
 });

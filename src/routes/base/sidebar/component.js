@@ -28,11 +28,15 @@ let MenuItem = React.createClass({
       "is-open": menuItem.isOpen
     });
 
+    let spanClasses = cx({
+      "nav-label": true
+    });
+
     return (
       <li className={liClasses}>
         <a href={menuItem.href} onClick={this.handleClick}>
           {menuItem.icon && <i className={menuItem.icon}></i>}
-          <span className="nav-label">{menuItem.name}</span>
+          <span className={spanClasses}>{menuItem.name}</span>
           {menuItem.childrens && <span className="fa arrow"></span>}
         </a>
         <ul ref="ul" className={ulClasses}>

@@ -9,11 +9,12 @@ var _ = require('lodash');
 
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
+var api = require('./api/api');
 
 var handleErrors = function() {
   var args = Array.prototype.slice.call(arguments);
-  delete args[0]['stream']
-  $.util.log(args)
+  delete args[0]['stream'];
+  $.util.log(args);
   this.emit('end');
 };
 
@@ -94,7 +95,10 @@ gulp.task('build', [
 gulp.task('watch', ['build'], function(cb) {
   browserSync({
     server: {
-      baseDir: 'dist'
+      baseDir: 'dist',
+      middleware: function(req, res, next) {
+        api(req, res, next);
+      }
     }
   });
 
