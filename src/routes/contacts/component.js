@@ -70,10 +70,20 @@ let PageComponent = React.createClass({
   }
 });
 
-export default (pageType="default") => {
+let beforeLoad = (pageType) => {
   Actions.setType(pageType);
   Actions.load();
+};
+
+export default (active, pageType="default") => {
+  let argsForLoad = [pageType];
   return (
-    <BaseComponent><PageComponent/></BaseComponent>
+    <BaseComponent
+      loadCallback={beforeLoad}
+      loadCallbackArgs={argsForLoad}
+      active={active}
+    >
+      <PageComponent pageType={pageType}/>
+    </BaseComponent>
   );
 };

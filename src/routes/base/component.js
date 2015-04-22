@@ -1,14 +1,40 @@
 import React from 'react';
+import Reflux from 'reflux';
 import SidebarComponent from './sidebar/component';
 import ContentComponent from './content/component';
+import SpinnerComponent from '../base/spinner/component';
+import SidebarActions from '../base/sidebar/actions';
+
+import Store from './profile/store';
+import Actions from './profile/actions';
 
 export default React.createClass({
+  mixins: [Reflux.connect(Store)],
+
+  getInitialState() {
+    Actions.load();
+  },
+
   render() {
-    return (
-      <div id="wrapper">
-        <SidebarComponent/>
-        <ContentComponent mainPage={this.props.children}/>
-      </div>
-    );
+    let profile = this.state.profile;
+
+    if (profile.isLoaded) {
+      if (this.props.loadCallback) {
+        this.props.loadCallback.apply(null, this.props.loadCallbackArgs);
+      }
+      if (this.props.active) {
+        SidebarActions.setActive(this.props.active);
+      }
+      return (
+        <div id="wrapper">
+          <SidebarComponent/>
+          <ContentComponent mainPage={this.props.children}/>
+        </div>
+      );
+    } else {
+      return (
+        <SpinnerComponent isShow={true}/>
+      );
+    }
   }
 });

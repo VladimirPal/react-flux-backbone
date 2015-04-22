@@ -7,8 +7,10 @@ Backbone.$ = $;
 import Application from './application/application';
 import Router from './routes/routes';
 import BaseComponent from './routes/base/component';
+import 'babel/polyfill';
 
 let app = new Application();
+app.initialize();
 window.App = app;
 
 let RootComponent = React.createClass({
