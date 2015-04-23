@@ -31,5 +31,12 @@ module.exports = function(api) {
     .get(function(req, res) {
       var model = collection.get(req.params.id);
       res.json(model);
+    })
+    .delete(function(req, res) {
+      if (req.params.id !== '2') {
+        res.json({success: true});
+      } else {
+        res.status(500).json({ error: 'Sample error message' });
+      }
     });
 };

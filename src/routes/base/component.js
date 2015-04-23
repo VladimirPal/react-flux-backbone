@@ -19,9 +19,6 @@ export default React.createClass({
     let profile = this.state.profile;
 
     if (profile.isLoaded) {
-      if (this.props.loadCallback) {
-        this.props.loadCallback.apply(null, this.props.loadCallbackArgs);
-      }
       if (this.props.active) {
         SidebarActions.setActive(this.props.active);
       }

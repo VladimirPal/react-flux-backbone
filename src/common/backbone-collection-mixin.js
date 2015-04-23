@@ -37,18 +37,15 @@ export default {
         },
         error: (collection, response) => {
           if (this.loadCount === 1) {
-            this.onLoadFailed(response);
+            this.listenables.load.failure(response);
           }
           this.loadCount -= 1;
-          // This bug should be fixed in new version
-          // https://github.com/spoike/refluxjs/issues/296
-          //Actions.load.failed(response);
         }
       }
     );
   },
 
-  failed(response) {
+  failureLoad(response) {
     let responseJSON = response.responseJSON;
 
     this[this.stateName].isSuccess = false;
@@ -60,8 +57,39 @@ export default {
     }
   },
 
-  completed(collection, response) {
+  completedLoad(collection, response) {
     this[this.stateName].isSuccess = true;
     this[this.stateName].isLoaded = true;
+  },
+
+  delete(model, backendDelete) {
+    if (backendDelete) {
+      model.destroy(
+        {
+          wait: true,
+          success: (m, response) => {
+            this.listenables.delete.completed(m, response);
+          },
+          error: (m, response) => {
+            this.listenables.delete.failure(m, response);
+          }
+        }
+      );
+    } else {
+      this[this.stateName].items.remove(model);
+      this.listenables.delete.completed();
+    }
+  },
+
+  failureDelete(model, response) {
+    let responseJSON = response.responseJSON;
+
+    model.hasError = true;
+    if (responseJSON && responseJSON.error) {
+      model.errorMsg = responseJSON.error;
+    } else {
+      model.errorMsg = "Unknown error";
+    }
   }
+
 };

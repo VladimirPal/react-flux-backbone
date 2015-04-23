@@ -31,17 +31,40 @@ export default Reflux.createStore({
     this.updateList();
   },
 
-  load() {
+  onClear() {
+    this.reset();
+    this.updateList();
+  },
+
+  onClearError(item) {
+    item.hasError = false;
+    this.updateList();
+  },
+
+  onLoad() {
     this.fetch();
   },
 
-  onLoadFailed(response) {
-    this.failed(response);
+  onLoadFailure(response) {
+    this.failureLoad(response);
     this.updateList();
   },
 
   onLoadCompleted(collection, response) {
-    this.completed(response);
+    this.completedLoad(response);
+    this.updateList();
+  },
+
+  onDelete(model, backendDelete=false) {
+    this.delete(model, backendDelete);
+  },
+
+  onDeleteCompleted(model, reponse) {
+    this.updateList();
+  },
+
+  onDeleteFailure(model, response) {
+    this.failureDelete(model, response);
     this.updateList();
   },
 

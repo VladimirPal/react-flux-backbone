@@ -89,6 +89,19 @@ let PageComponent = React.createClass({
             <button type="submit" className="btn btn-primary block full-width m-b">Login</button>
           </form>
         </div>
+        <div className="middle-box text-center">
+          <div className="alert alert-success">
+            <p>
+              Admin permissions:<br/>
+              Username: admin Password: admin
+            </p>
+
+            <p>
+              User permissions:<br/>
+              Username: user Password: user
+            </p>
+          </div>
+        </div>
       </div>
     );
   }

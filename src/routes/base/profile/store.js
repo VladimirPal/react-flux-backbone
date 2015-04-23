@@ -17,7 +17,11 @@ export default Reflux.createStore({
     return initObj;
   },
 
-  load() {
+  getProfile() {
+    return this.profile.item.attributes;
+  },
+
+  onLoad() {
     this.fetch();
   },
 
