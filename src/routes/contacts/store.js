@@ -12,9 +12,7 @@ export default Reflux.createStore({
   },
 
   getInitialState() {
-    if (!this[this.stateName]) {
-      return this.initBackboneState();
-    }
+    return this.initBackboneState();
   },
 
   onSetType(type) {
