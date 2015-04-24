@@ -12,7 +12,9 @@ export default Reflux.createStore({
   },
 
   getInitialState() {
-    return this.initBackboneState();
+    if (!this[this.stateName]) {
+      return this.initBackboneState();
+    }
   },
 
   onSetType(type) {
@@ -28,7 +30,6 @@ export default Reflux.createStore({
         this.changeUrl("/api/contacts-empty-list");
         break;
     }
-    this.updateList();
   },
 
   onClear() {
@@ -55,6 +56,20 @@ export default Reflux.createStore({
     this.updateList();
   },
 
+  onSave(model, data) {
+    this.save(model, data);
+  },
+
+  onSaveFailure(model, response) {
+    this.failureSave(model, response);
+    this.trigger({model: model, response: response});
+  },
+
+  onSaveCompleted(model, response) {
+    this.completedSave(response);
+    this.trigger({model: model, response: response});
+  },
+
   onDelete(model, backendDelete=false) {
     this.delete(model, backendDelete);
   },
@@ -68,7 +83,7 @@ export default Reflux.createStore({
     this.updateList();
   },
 
-  updateList() {
-    this.trigger(this[this.stateName]);
+  updateList(data=this[this.stateName]) {
+    this.trigger(data);
   }
 });

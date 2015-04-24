@@ -25,7 +25,9 @@ export default React.createClass({
       return (
         <div id="wrapper">
           <SidebarComponent/>
-          <ContentComponent mainPage={this.props.children}/>
+          <ContentComponent
+            header={this.props.header}
+            mainPage={this.props.children}/>
         </div>
       );
     } else {

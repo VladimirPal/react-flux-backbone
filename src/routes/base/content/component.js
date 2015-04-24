@@ -6,7 +6,7 @@ export default React.createClass({
   render() {
     return (
       <div id="page-wrapper" className="gray-bg dashbard-1">
-        <HeaderComponent/>
+        <HeaderComponent additionalHeader={this.props.header}/>
         {this.props.mainPage}
         <FooterComponent/>
       </div>

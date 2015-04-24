@@ -90,6 +90,46 @@ export default {
     } else {
       model.errorMsg = "Unknown error";
     }
+  },
+
+  save(model, data) {
+    model.set(data);
+    if (model.isNew()) {
+      model.url = this[this.stateName].items.url;
+    }
+    model.save(
+      null,
+      {
+        wait: true,
+        success: (m, response) => {
+          this.listenables.save.completed(m, response);
+        },
+        error: (m, response) => {
+          this.listenables.save.failure(m, response);
+        }
+      }
+    );
+  },
+
+  completedSave(model, response) {
+    model.hasError = false;
+    model.errorMsg = null;
+    this[this.stateName].items.unshift(model);
+  },
+
+  failureSave(model, response) {
+    let responseJSON = response.responseJSON;
+
+    model.hasError = true;
+    if (responseJSON && responseJSON.error) {
+      model.errorMsg = responseJSON.error;
+    } else {
+      model.errorMsg = "Unknown error";
+    }
+  },
+
+  getNewItem() {
+    return new Backbone.Model();
   }
 
 };
