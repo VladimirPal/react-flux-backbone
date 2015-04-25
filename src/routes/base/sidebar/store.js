@@ -54,7 +54,7 @@ export default Reflux.createStore({
         icon: "fa fa-th-large",
         childrens: [
           {id: "ThirdPage", name: "SubMenu item", href: "#/third"},
-          {name: "SubMenu item", href: "#"}
+          {name: "SubMenu item", href: "#/third"}
         ]
       }
     ];

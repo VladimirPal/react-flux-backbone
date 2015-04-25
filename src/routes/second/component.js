@@ -3,6 +3,8 @@ import BaseComponent from '../base/component';
 
 export default (active) => {
   return (
-    <BaseComponent active={active}></BaseComponent>
+    <BaseComponent active={active}>
+      <h2 className="text-center">Empty page</h2>
+    </BaseComponent>
   );
 };

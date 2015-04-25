@@ -28,7 +28,5 @@ app.appRoot = React.render(
   document.getElementById('application')
 );
 
-app.routes = new Router({
-  container: document.getElementById('main-layout')
-});
+app.routes = new Router();
 Backbone.history.start();
