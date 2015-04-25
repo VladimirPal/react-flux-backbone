@@ -40,7 +40,10 @@ export default Reflux.createStore({
     this.updateList();
   },
 
-  onLoad() {
+  onLoad(needClear=false) {
+    if (needClear) {
+      Actions.clear();
+    }
     this.fetch();
   },
 

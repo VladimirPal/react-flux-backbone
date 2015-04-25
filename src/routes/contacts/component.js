@@ -83,7 +83,7 @@ let PageComponent = React.createClass({
 
   componentWillReceiveProps(nextProps) {
     Actions.setType(nextProps.pageType);
-    Actions.load();
+    Actions.load(true);
   },
 
   render() {
