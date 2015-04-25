@@ -7,7 +7,6 @@ module.exports = function(api) {
     .get(function(req, res) {
       setTimeout(function() {
         res.json(collection);
-        //res.status(500).json({ error: 'message' });
       }, 1);
     })
     .post(function(req, res) {
@@ -29,7 +28,7 @@ module.exports = function(api) {
     .get(function(req, res) {
       setTimeout(function() {
         res.status(500).json({ error: 'Error message' });
-      }, 1);
+      }, 2000);
     });
 
 

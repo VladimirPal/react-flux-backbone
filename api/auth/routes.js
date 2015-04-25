@@ -16,7 +16,7 @@ module.exports = function(api) {
     .get(function(req, res) {
       setTimeout(function() {
         res.json(api.current_user);
-      }, 1);
+      }, 1000);
     });
 
 };
