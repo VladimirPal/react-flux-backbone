@@ -1,6 +1,11 @@
 # react-flux-backbone
 It's a sample react app with authentication, permissions, sidebar and editable collection.
 
+### Install
+
+```sh
+$ npm install
+```
 ### Run
 
 Just run gulp
