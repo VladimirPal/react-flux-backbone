@@ -12,9 +12,15 @@ export default Reflux.createStore({
   },
 
   getInitialState() {
-    let initObj = this.initBackboneState();
-    this.changeUrl('/api/profile');
-    return initObj;
+    if (this[this.stateName] === undefined) {
+      let initObj = this.initBackboneState();
+      this.changeUrl('/api/profile');
+      return initObj;
+    } else {
+      let returnObj = {};
+      returnObj[this.stateName] = this[this.stateName];
+      return returnObj;
+    }
   },
 
   getProfile() {
@@ -27,15 +33,11 @@ export default Reflux.createStore({
 
   onLoadFailed(response) {
     this.failed(response);
-    this.updateList();
+    this.update();
   },
 
   onLoadCompleted(collection, response) {
     this.completed(response);
-    this.updateList();
-  },
-
-  updateList() {
-    this.trigger(this[this.stateName]);
+    this.update();
   }
 });

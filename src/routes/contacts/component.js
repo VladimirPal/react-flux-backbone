@@ -14,6 +14,8 @@ import BaseComponent from '../base/component';
 import SpinnerComponent from '../base/spinner/component';
 import ErrorComponent from '../base/errors/component';
 import EmptyComponent from '../base/empty/component';
+import ConfirmModal from '../base/confirm/component';
+import Select2Component from '../base/select2/component';
 
 import Store from './store';
 import Actions from './actions';
@@ -138,7 +140,9 @@ let ContactItem = React.createClass({
               <ModalTrigger modal={<ContactFormModal contactItem={contact}/>}>
                 <a href="#"><i className="fa fa-edit"></i></a>
               </ModalTrigger>
-              <a onClick={this.handleRemove}><i className="fa fa-times"></i></a>
+              <ConfirmModal confirmAction={this.handleRemove} title="Remove contact">
+                <a><i className="fa fa-times"></i></a>
+              </ConfirmModal>
             </div>
           }
           {
@@ -213,7 +217,34 @@ const ContactFormModal = React.createClass({
       formError: null,
       errors: {},
       fields: {
-        name: ['required']
+        name: this.validators.required({errorMsg: 'Your own error msg'}),
+        select2: {converter: this.converters.select2}
+      },
+      sampleSelect2Data: {
+        placeholder: "Choose sample data",
+        allowClear: true,
+        ajax: {
+          url: "/api/sample-live-search/",
+          dataType: 'json',
+          delay: 250,
+          data: (params) => {
+            return {
+              q: params.term,
+              page: params.page,
+              page_limit: 20
+            };
+          },
+          processResults: (data, params) => {
+            params.page = params.page || 1;
+            return {
+              results: data.items,
+              pagination: {
+                more: (params.page * 20) < data.total_count
+              }
+            };
+          },
+          cache: true
+        }
       }
     };
   },
@@ -231,7 +262,7 @@ const ContactFormModal = React.createClass({
     let fieldName = event.target.name;
 
     validateObj[fieldName] = this.state.fields[fieldName];
-    let res = this.validate(validateObj);
+    let res = this.validate('change', validateObj);
     this.setState({errors: res.errors});
   },
 
@@ -242,8 +273,7 @@ const ContactFormModal = React.createClass({
     if (Object.keys(res.errors).length !== 0) {
       this.setState({errors: res.errors});
     } else {
-      let data = this.getData();
-      Actions.save(this.props.contactItem, data);
+      Actions.save(this.props.contactItem, res.data);
     }
   },
 
@@ -260,12 +290,26 @@ const ContactFormModal = React.createClass({
       <Modal {...this.props} className='inmodal' title={"New contact"} animation={true} onRequestHide={this.props.onRequestHide}>
         <form onSubmit={this.handleSubmit} role="form">
           <div className='modal-body'>
-            <div className={nameClasses}>
+            <div className={errors.name ? "form-group has-error": "form-group"}>
               <label>Name</label>
               <label className="error">{errors.name}</label>
               <input ref="name" name="name" type="text" placeholder="Enter name"
                 onChange={this.handleChange} defaultValue={item.get('name')} className="form-control"/>
             </div>
+            <div className={errors.select2 ? "form-group has-error": "form-group"}>
+              <label>Sample select2 field</label>
+              <Select2Component select2Data={this.state.sampleSelect2Data}>
+                <select ref="select2" name="select2" style={{width: '100%'}} multiple="multiple">
+                {['sample1', 'sample2'].map( (mitem, key) => {
+                    return (
+                      <option key={key} value={mitem} selected="selected">{mitem}</option>
+                    );
+                  })
+                }
+                </select>
+              </Select2Component>
+            </div>
+
             <p>It's a simple sample form, only name</p>
             <ErrorComponent msg={item.errorMsg} isShow={item.errorMsg}/>
           </div>

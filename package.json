@@ -33,6 +33,8 @@
     "lodash": "^3.6.0",
     "react": "^0.13.1",
     "react-bootstrap": "^0.21.0",
+    "jquery.mousewheel": "^3.1.9",
+    "select2": "select2/select2",
     "reflux": "^0.2.7"
   },
   "browserify": {

@@ -49,4 +49,9 @@ module.exports = function(api) {
         res.status(500).json({ error: 'Sample error message' });
       }
     });
+
+  api.route('/api/sample-live-search')
+    .get(function(req, res) {
+      res.json({items: [{id: 1, text: 'sample3'}, {id: 2, text: 'sample4'}], total_count: 2});
+    });
 };

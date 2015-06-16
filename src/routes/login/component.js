@@ -11,8 +11,8 @@ let PageComponent = React.createClass({
     return {
       errors: {},
       fields: {
-        username: ['required'],
-        password: ['required']
+        username: this.validators.required,
+        password: this.validators.required
       }
     };
   },
@@ -22,7 +22,7 @@ let PageComponent = React.createClass({
     let fieldName = event.target.name;
 
     validateObj[fieldName] = this.state.fields[fieldName];
-    let res = this.validate(validateObj);
+    let res = this.validate('change', validateObj);
     this.setState({errors: res.errors});
   },
 
@@ -33,13 +33,12 @@ let PageComponent = React.createClass({
     if (Object.keys(res.errors).length !== 0) {
       this.setState({errors: res.errors});
     } else {
-      let data = this.getData();
       $.ajax({
         url: '/auth',
         type: 'POST',
         contentType: 'application/json',
         dataType: 'json',
-        data: JSON.stringify(data),
+        data: JSON.stringify(res.data),
         success: (sData) => {
           if (sData.success) {
             window.localStorage.setItem('accessToken', sData.token);

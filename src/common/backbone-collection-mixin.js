@@ -27,19 +27,19 @@ export default {
       this.loadCount = 0;
     }
     this.loadCount += 1;
+    let myCountNumber = this.loadCount;
+
     this[this.stateName].items.fetch(
       {
         success: (collection, response) => {
-          if (this.loadCount === 1) {
+          if (myCountNumber === this.loadCount) {
             this.listenables.load.completed(collection, response);
           }
-          this.loadCount -= 1;
         },
         error: (collection, response) => {
-          if (this.loadCount === 1) {
+          if (myCountNumber === this.loadCount) {
             this.listenables.load.failure(response);
           }
-          this.loadCount -= 1;
         }
       }
     );

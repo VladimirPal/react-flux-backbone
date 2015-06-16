@@ -1,11 +1,17 @@
 import Backbone from 'backbone';
 
 export default {
-  initBackboneState() {
+  initBackboneState(url=false, defaults={}) {
+    let Model = Backbone.Model.extend({
+      defaults: defaults
+    });
     this[this.stateName] = {
       isLoaded: false,
-      item: new Backbone.Model()
+      item: new Model()
     };
+    if (url) {
+      this[this.stateName].item.url = url;
+    }
     let returnObj = {};
     returnObj[this.stateName] = this[this.stateName];
 
@@ -63,5 +69,11 @@ export default {
   completed(collection, response) {
     this[this.stateName].isSuccess = true;
     this[this.stateName].isLoaded = true;
+  },
+
+  update(action=false, data=this[this.stateName]) {
+    let response = {action: action};
+    response[this.stateName] = this[this.stateName];
+    this.trigger(response);
   }
 };
