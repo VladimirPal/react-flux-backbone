@@ -1,5 +1,6 @@
 # react-flux-backbone
 It's a sample react app with authentication, permissions, sidebar and editable collection.
+Form validation mixin, select2(4.0.0) mixin.
 
 ### Install
 
