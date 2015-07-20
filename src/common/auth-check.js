@@ -1,4 +1,5 @@
 export default () => {
+  console.log('authCheck');
   if (window.localStorage.accessToken) {
     return true;
   }
