@@ -5,7 +5,6 @@ import $ from 'jquery';
 Backbone.$ = $;
 
 import Application from './application/application';
-import BaseComponent from './routes/base/component';
 import 'babel/polyfill';
 
 let app = new Application();
@@ -32,8 +31,8 @@ import ContactsRouter from './routes/contacts/router';
 import OtherRouter from './routes/other/router';
 import authCheck from './common/auth-check';
 
-app.routes = new LoginRouter();
-app.contacts = new ContactsRouter(authCheck);
-app.routes = new OtherRouter(authCheck);
+app.loginRouter = new LoginRouter();
+app.contactsRouter = new ContactsRouter(authCheck);
+app.otherRouter = new OtherRouter(authCheck);
 
 Backbone.history.start();
