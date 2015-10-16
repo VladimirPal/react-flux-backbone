@@ -5,7 +5,7 @@ let capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-function validatorRun(validator, errors, eventName, fieldName, fieldValue, field) {
+function validatorRun(validator, errors, eventName, fieldName, fieldValue, field, refs) {
   let validateResult = validator.apply(
       this,
       [
@@ -14,7 +14,8 @@ function validatorRun(validator, errors, eventName, fieldName, fieldValue, field
           eventName: eventName,
           fieldName: fieldName,
           fieldValue: fieldValue,
-          field: field
+          field: field,
+          refs: refs
         }, false
       ]);
   if (validateResult) {
@@ -49,7 +50,7 @@ let validatorsHelpers = {
       if (typeof fData.validateEvent === 'undefined') {
         fData.validateEvent = 'all';
       }
-      if (fData.validateEvent !== 'all' && fData.validateEvent !== data.eventName) {
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
         return null;
       }
       // ---
@@ -65,7 +66,7 @@ let validatorsHelpers = {
       }
       // ---
     }
-    // --- Retur func if args and run if not
+    // --- Return func if args and run if not
     if (funcReturn) {
       return returnFunc;
     } else {
@@ -80,7 +81,7 @@ let validatorsHelpers = {
       if (typeof fData.validateEvent === 'undefined') {
         fData.validateEvent = 'all';
       }
-      if (fData.validateEvent !== 'all' && fData.validateEvent !== data.eventName) {
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
         return null;
       }
       // ---
@@ -95,7 +96,7 @@ let validatorsHelpers = {
         return false;
       }
     }
-    // --- Retur func if args and run if not
+    // --- Return func if args and run if not
     if (funcReturn) {
       return returnFunc;
     } else {
@@ -110,7 +111,7 @@ let validatorsHelpers = {
       if (typeof fData.validateEvent === 'undefined') {
         fData.validateEvent = 'all';
       }
-      if (fData.validateEvent !== 'all' && fData.validateEvent !== data.eventName) {
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
         return null;
       }
       // ---
@@ -127,7 +128,7 @@ let validatorsHelpers = {
       }
       // ---
     }
-    // --- Retur func if args and run if not
+    // --- Return func if args and run if not
     if (funcReturn) {
       return returnFunc;
     } else {
@@ -142,7 +143,7 @@ let validatorsHelpers = {
       if (typeof fData.validateEvent === 'undefined') {
         fData.validateEvent = 'all';
       }
-      if (fData.validateEvent !== 'all' && fData.validateEvent !== data.eventName) {
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
         return null;
       }
       // ---
@@ -151,11 +152,15 @@ let validatorsHelpers = {
       if (value && !isNaN(parseFloat(value))) {
         return false;
       } else {
-        return capitalizeFirstLetter(data.fieldName) + " must be a valid";
+        if (fData.errorMsg) {
+          return fData.errorMsg;
+        } else {
+          return capitalizeFirstLetter(data.fieldName) + " must be a valid";
+        }
       }
       // ---
     }
-    // --- Retur func if args and run if not
+    // --- Return func if args and run if not
     if (funcReturn) {
       return returnFunc;
     } else {
@@ -167,10 +172,11 @@ let validatorsHelpers = {
   email(fData, funcReturn=true) {
     function returnFunc(data) {
       // --- Event check ---
+
       if (typeof fData.validateEvent === 'undefined') {
         fData.validateEvent = 'all';
       }
-      if (fData.validateEvent !== 'all' && fData.validateEvent !== data.eventName) {
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
         return null;
       }
       // ---
@@ -179,7 +185,43 @@ let validatorsHelpers = {
       if (re.test(data.fieldValue)) {
         return false;
       } else {
-        return capitalizeFirstLetter(data.fieldName) + " must be a valid";
+        if (fData.errorMsg) {
+          return fData.errorMsg;
+        } else {
+          return capitalizeFirstLetter(data.fieldName) + " must be a valid";
+        }
+      }
+      // ---
+    }
+    // --- Return func if args and run if not
+    if (funcReturn) {
+      return returnFunc;
+    } else {
+      return returnFunc.apply(this, [fData]);
+    }
+    // ---
+  },
+
+  minLenght(fData, funcReturn=true) {
+    function returnFunc(data) {
+      // --- Event check ---
+
+      if (typeof fData.validateEvent === 'undefined') {
+        fData.validateEvent = 'all';
+      }
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
+        return null;
+      }
+      // ---
+      // --- Validator logic ---
+      if (data.fieldValue && data.fieldValue.length >= fData.min) {
+        return false;
+      } else {
+        if (fData.errorMsg) {
+          return fData.errorMsg;
+        } else {
+          return `${capitalizeFirstLetter(name)} must be at least ${fData.min} characters`;
+        }
       }
       // ---
     }
@@ -192,25 +234,43 @@ let validatorsHelpers = {
     // ---
   },
 
-  minLenght(fData, funcReturn=true) {
+  equal(fData, funcReturn=true) {
     function returnFunc(data) {
       // --- Event check ---
       if (typeof fData.validateEvent === 'undefined') {
         fData.validateEvent = 'all';
       }
-      if (fData.validateEvent !== 'all' && fData.validateEvent !== data.eventName) {
+      if (fData.validateEvent !== 'all' && data.eventName !== 'all' && fData.validateEvent !== data.eventName) {
         return null;
       }
       // ---
       // --- Validator logic ---
-      if (data.fieldValue && data.fieldValue.length >= fData.min) {
+      let equalField = React.findDOMNode(data.refs[fData.field]);
+      let equalFieldValue = equalField.value;
+      if (equalField.type === 'checkbox') {
+        equalFieldValue = equalField.checked;
+      } else if (equalField.type === 'radio') {
+        for (let radio of equalField.form.querySelectorAll(`input[name=${equalField.name}]`)) {
+          if (radio.checked) {
+            equalFieldValue = radio.value;
+            break;
+          }
+        }
+      }
+
+      if (data.fieldValue === equalFieldValue) {
         return false;
       } else {
-        return `${capitalizeFirstLetter(name)} must be at least ${fData.min} characters`;
+        if (fData.errorMsg) {
+          return fData.errorMsg;
+        } else {
+          return `${capitalizeFirstLetter(data.fieldName)} must be equal with ${fData.field}`;
+        }
       }
+
       // ---
     }
-    // --- Retur func if args and run if not
+    // --- Return func if args and run if not
     if (funcReturn) {
       return returnFunc;
     } else {
@@ -218,7 +278,6 @@ let validatorsHelpers = {
     }
     // ---
   }
-
 
 };
 
@@ -231,6 +290,9 @@ let validateObj = {
 
     for (let [fieldName, validatorsObj] of Object.entries(fields)) {
       let field = React.findDOMNode(this.refs[fieldName]);
+      if (field.nodeName !== 'INPUT') {
+        field = field.getElementsByTagName('input')[0];
+      }
       if (!field) {
         continue;
       }
@@ -279,11 +341,12 @@ let validateObj = {
       }
       if (!validators) {
         validators = [];
+        delete errors[fieldName];
       }
 
       for (let validator of validators) {
         let validatorType = typeof validator;
-        if (!validatorRun.apply(this, [validator, errors, eventName, fieldName, fieldValue, field])) {
+        if (!validatorRun.apply(this, [validator, errors, eventName, fieldName, fieldValue, field, this.refs])) {
           break;
         }
       }
