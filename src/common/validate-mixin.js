@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 let capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -289,7 +290,7 @@ let validateObj = {
     }
 
     for (let [fieldName, validatorsObj] of Object.entries(fields)) {
-      let field = React.findDOMNode(this.refs[fieldName]);
+      let field = ReactDOM.findDOMNode(this.refs[fieldName]);
       if (field.nodeName !== 'INPUT') {
         field = field.getElementsByTagName('input')[0];
       }

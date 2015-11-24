@@ -4,18 +4,16 @@ import Reflux from 'reflux';
 import cx from 'classnames';
 
 import ValidateMixin from '../../common/validate-mixin';
-let OverlayMixin = require('react-bootstrap/lib/OverlayMixin');
 
 let Button = require('react-bootstrap/lib/Button');
 let Modal = require('react-bootstrap/lib/Modal');
-let ModalTrigger = require('react-bootstrap/lib/ModalTrigger');
 
 import BaseComponent from '../base/component';
 import SpinnerComponent from '../base/spinner/component';
 import ErrorComponent from '../base/errors/component';
 import EmptyComponent from '../base/empty/component';
 import ConfirmModal from '../base/confirm/component';
-import Select2Component from '../base/select2/component';
+import Select2Component from 'select2-react-component';
 
 import Store from './store';
 import Actions from './actions';
@@ -38,40 +36,35 @@ export default (active, pageType="default") => {
 };
 
 
-let HeaderComponent = React.createClass({
-  mixins: [OverlayMixin],
+const HeaderComponent = React.createClass({
 
   getInitialState() {
     return {
+      showModal: false,
       isModalOpen: false
     };
   },
 
-  handleToggle() {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen
-    });
+  showModal() {
+    this.setState({ showModal: true });
   },
 
-  renderOverlay() {
-    if (!this.state.isModalOpen) {
-      return <span/>;
-    }
-
-    return (<ContactFormModal onRequestHide={this.handleToggle} contactItem={Store.getNewItem()}/>);
+  closeModal() {
+    this.setState({ showModal: false });
   },
 
   render() {
     return (
       <div className="navbar-header">
-        <a onClick={this.handleToggle} className="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">Add new contact</a>
+        <a onClick={this.showModal} className="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">Add new contact</a>
+          <ContactFormModal contactItem={Store.getNewItem()} show={this.state.showModal} onHide={this.closeModal}/>
       </div>
     );
   }
 });
 
 
-let PageComponent = React.createClass({
+const PageComponent = React.createClass({
   mixins: [Reflux.connect(Store)],
 
   componentWillMount() {
@@ -113,9 +106,17 @@ let PageComponent = React.createClass({
 });
 
 
-let ContactItem = React.createClass({
+const ContactItem = React.createClass({
   getInitialState() {
     return {showModal: false};
+  },
+
+  showModal() {
+    this.setState({ showModal: true });
+  },
+
+  closeModal() {
+    this.setState({ showModal: false });
   },
 
   handleRemove() {
@@ -137,9 +138,8 @@ let ContactItem = React.createClass({
           {
             (isAdmin && !contact.hasError) &&
             <div className="ibox-tools">
-              <ModalTrigger modal={<ContactFormModal contactItem={contact}/>}>
-                <a href="#"><i className="fa fa-edit"></i></a>
-              </ModalTrigger>
+              <a onClick={this.showModal}><i className="fa fa-edit"></i></a>
+              <ContactFormModal contactItem={contact} show={this.state.showModal} onHide={this.closeModal}/>
               <ConfirmModal confirmAction={this.handleRemove} title="Remove contact">
                 <a><i className="fa fa-times"></i></a>
               </ConfirmModal>
@@ -156,7 +156,18 @@ let ContactItem = React.createClass({
 });
 
 
-let ContactItemContent = React.createClass({
+const ContactItemContent = React.createClass({
+  getInitialState() {
+    return {authCode: false, showModal: false};
+  },
+
+  showModal() {
+    this.setState({ showModal: true });
+  },
+
+  closeModal() {
+    this.setState({ showModal: false });
+  },
 
   render() {
     let contact = this.props.contactItem;
@@ -168,9 +179,9 @@ let ContactItemContent = React.createClass({
           <div className="text-center">
             <img className="img-circle m-t-xs img-responsive inl-bl" src={contactImg} />
             { this.props.showModal ?
-              <ModalTrigger modal={<ContactModal contactItem={contact} />}>
-                <a className="m-t-xs font-bold inl-bl">Graphics designer</a>
-              </ModalTrigger> :
+              <a onClick={this.showModal} className="m-t-xs font-bold inl-bl">Graphics designer
+                <ContactModal contactItem={contact} show={this.state.showModal} onHide={this.closeModal}/>
+              </a> :
               <span className="m-t-xs font-bold inl-bl">Graphics designer</span>
             }
           </div>
@@ -201,7 +212,7 @@ const ContactModal = React.createClass({
           <p className="text-center">Here can be additional information...</p>
         </div>
         <div className='modal-footer'>
-          <Button onClick={this.props.onRequestHide}>Close</Button>
+          <Button onClick={this.props.onHide}>Close</Button>
         </div>
       </Modal>
     );
@@ -250,10 +261,10 @@ const ContactFormModal = React.createClass({
   },
 
   onFinishedSave(data) {
-    if (data.model.errorMsg) {
-      this.setState({formError: data.model.errorMsg});
+    if (data.errorMsg) {
+      this.setState({formError: data.errorMsg});
     } else {
-      this.props.onRequestHide();
+      this.props.onHide();
     }
   },
 
@@ -268,8 +279,9 @@ const ContactFormModal = React.createClass({
 
   handleSubmit(event) {
     event.preventDefault();
-    let res = this.validate();
-
+    let res = this.validate('submit');
+    console.log(res);
+    console.log(Object.keys(res.errors).length);
     if (Object.keys(res.errors).length !== 0) {
       this.setState({errors: res.errors});
     } else {
@@ -287,7 +299,7 @@ const ContactFormModal = React.createClass({
     });
 
     return (
-      <Modal {...this.props} className='inmodal' title={"New contact"} animation={true} onRequestHide={this.props.onRequestHide}>
+      <Modal {...this.props} className='inmodal' title={"New contact"} animation={true} onRequestHide={this.props.onHide}>
         <form onSubmit={this.handleSubmit} role="form">
           <div className='modal-body'>
             <div className={errors.name ? "form-group has-error": "form-group"}>
@@ -299,10 +311,10 @@ const ContactFormModal = React.createClass({
             <div className={errors.select2 ? "form-group has-error": "form-group"}>
               <label>Sample select2 field</label>
               <Select2Component select2Data={this.state.sampleSelect2Data}>
-                <select ref="select2" name="select2" style={{width: '100%'}} multiple="multiple">
+                <select onChange={this.handleChange}  ref="select2" name="select2" style={{width: '100%'}} multiple="multiple">
                 {['sample1', 'sample2'].map( (mitem, key) => {
                     return (
-                      <option key={key} value={mitem} selected="selected">{mitem}</option>
+                      <option key={key} value={mitem}>{mitem}</option>
                     );
                   })
                 }
@@ -315,7 +327,7 @@ const ContactFormModal = React.createClass({
           </div>
           <div className='modal-footer'>
             <Button bsStyle='success' type="submit">Save</Button>
-            <Button onClick={this.props.onRequestHide}>Close</Button>
+            <Button onClick={this.props.onHide}>Close</Button>
           </div>
         </form>
       </Modal>

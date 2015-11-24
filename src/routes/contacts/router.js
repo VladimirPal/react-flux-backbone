@@ -13,14 +13,14 @@ export default Router.extend({
   },
 
   contactsPageRoute() {
-    App.appRoot.setProps({layout: contactsPage("contacts")});
+    App.renderRoot({layout: contactsPage("contacts")});
   },
 
   contactsErrorPageRoute() {
-    App.appRoot.setProps({layout: contactsPage("contacts-error", "contacts-error")});
+    App.renderRoot({layout: contactsPage("contacts-error", "contacts-error")});
   },
 
   contactsEmptyPageRoute() {
-    App.appRoot.setProps({layout: contactsPage("contacts-empty", "contacts-empty")});
+    App.renderRoot({layout: contactsPage("contacts-empty", "contacts-empty")});
   }
 });
