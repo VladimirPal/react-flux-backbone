@@ -11,11 +11,11 @@ export default Router.extend({
   },
 
   secondPageRoute() {
-    App.appRoot.setProps({layout: secondPage("SecondPage")});
+    App.renderRoot({layout: secondPage("SecondPage")});
   },
 
   thirdPageRoute() {
-    App.appRoot.setProps({layout: thirdPage("ThirdPage")});
+    App.renderRoot({layout: thirdPage("ThirdPage")});
   }
 
 });

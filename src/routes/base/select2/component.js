@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import React, { cloneElement } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
 require('Select2');
 
 export default React.createClass({
@@ -7,7 +8,7 @@ export default React.createClass({
     if (data === undefined) {
       data = {};
     }
-    let elem = $(React.findDOMNode(this));
+    let elem = ReactDOM.findDOMNode(this);
     this._select2 = elem.select2(data);
     $(elem).on('change', (e) => {
       if (this.props.onChange) {
@@ -24,7 +25,7 @@ export default React.createClass({
     this.runSelect2();
   },
   componentWillUpdate() {
-    let elem = $(React.findDOMNode(this));
+    let elem = ReactDOM.findDOMNode(this);
     // Dirty hack, remove new options that was added in DOM by select2
     elem.find('option:not([data-reactid])').remove();
   },

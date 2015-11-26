@@ -10,7 +10,7 @@ export default Router.extend({
   },
 
   loginPageRoute() {
-    App.appRoot.setProps({layout: loginPage()});
+    App.renderRoot({layout: loginPage()});
   },
 
   logoutPageRoute() {

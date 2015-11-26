@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import Backbone from 'backbone';
 import $ from 'jquery';
@@ -21,10 +22,13 @@ let RootComponent = React.createClass({
   }
 });
 
-app.appRoot = React.render(
-  <RootComponent/>,
-  document.getElementById('application')
-);
+app.renderRoot = function(props) {
+  app.appRoot = ReactDOM.render(
+    <RootComponent {...props}/>,
+    document.getElementById('application')
+  );
+};
+app.renderRoot();
 
 import LoginRouter from './routes/login/router';
 import ContactsRouter from './routes/contacts/router';
