@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var browserify = require('browserify');
+var babelify = require('babelify');
 var del = require('del');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
@@ -19,7 +20,7 @@ var handleErrors = function() {
 };
 
 gulp.task('clean', function(cb) {
-  del([
+  return del([
     'app/tmp'
   ], cb);
 });
@@ -47,6 +48,7 @@ var bundler = _.memoize(function(watch) {
   }
 
   var b = browserify('./src/main.js', options);
+  b.transform(babelify, { presets: ['es2015', 'react'] });
 
   if (watch) {
     b = watchify(b);

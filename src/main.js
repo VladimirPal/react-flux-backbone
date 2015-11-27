@@ -6,7 +6,7 @@ import $ from 'jquery';
 Backbone.$ = $;
 
 import Application from './application/application';
-import 'babel/polyfill';
+import 'babel-polyfill';
 
 let app = new Application();
 app.initialize();
